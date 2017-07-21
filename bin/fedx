@@ -1,0 +1,53 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var fs = require('fs-extra');
+var color = require('colors');
+var program = require('commander');
+var findup = require('findup-sync');
+var fedx = require('../index');
+
+program
+	.version(require('../package.json').version, '-v --version')
+	.usage('<command> [options]')
+	.option('-o --open', 'open site in browser after server startup');
+
+program
+	.command('init [name]')
+	.description('initial the project')
+	.action(init);
+
+program
+	.command('')
+	.description('startup server');
+
+program.parse(process.argv);
+
+if (!program.args.length) server();
+
+
+function init(name, opts) {
+	var dest = process.cwd();
+	if (name) dest = path.resolve(dest, name);
+
+	fs.copy(path.resolve(__dirname, '../example'), dest, function (err) {
+		if (err) {
+			console.error(err.red);
+			return;
+		}
+		console.log('Project inited.'.green);
+	});
+}
+
+function server() {
+	var configFile = findup('fedx-config.js');
+
+	if (!configFile) {
+		console.log('[Error] '.red + 'fedx-config.js'.magenta + ' is not found in path.');
+		return;
+	}
+
+	var app = fedx(configFile);
+
+	if (program.open) app.openBrowser();
+}
