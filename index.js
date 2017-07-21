@@ -99,19 +99,19 @@ module.exports = function (config) {
 	};
 
 	app.listen(config.port, function () {
-		console.log('FE Dev Server is listening on port '.green + config.port.toString().green);
+		console.log('fed-x-server is listening on port '.green + config.port.toString().green);
 	});
 
 	process.on('uncaughtException', function(err) {
 	    if(err.errno === 'EADDRINUSE') {
-	        console.log(('FE Dev Server:  Port ' + err.port + ' is already in use.').red);
+	        console.log(('fed-x-server:  Port ' + err.port + ' is already in use.').red);
 	        process.exit(1);
 	    } else
 	        console.log(err);
 	});
 
 	process.on('SIGINT', function () {
-		console.log('FE Dev Server is stopped.'.green);
+		console.log('fed-x-server is stopped.'.green);
 		process.exit();
 	});
 
